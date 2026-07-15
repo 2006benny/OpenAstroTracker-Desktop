@@ -20,17 +20,27 @@ est délégué à KStars/Ekos via le driver INDI `lx200_OpenAstroTech`.
 - **Maintenance** : reset EEPROM (avec confirmation)
 - **Thèmes** : sombre astronomie + **mode rouge vision nocturne** (bascule à chaud)
 
-## Compilation
+## Installation
+
+```bash
+git clone https://github.com/OpenAstroTech/OpenAstroTracker-Desktop.git
+cd OpenAstroTracker-Desktop
+./OATControlX/install.sh
+```
+
+Le script vérifie le SDK .NET 8 (et indique comment l'installer selon la distro),
+compile en Release self-contained, installe dans `~/.local/share/oatcontrolx`,
+crée le lanceur `oatcontrolx` dans `~/.local/bin`, l'entrée de menu
+(Applications → Science, avec le logo OAT) et vérifie l'appartenance au groupe
+`dialout` pour l'accès au port série. Aucun sudo requis.
+
+Désinstallation : `./OATControlX/install.sh --uninstall`
+
+## Développement
 
 ```bash
 dotnet build OATControlX.sln
 dotnet run --project OATControlX
-```
-
-Publication autonome (sans SDK sur la machine cible) :
-
-```bash
-dotnet publish OATControlX -c Release -r linux-x64 --self-contained -o dist/
 ```
 
 ## Accès au port série sous Linux
