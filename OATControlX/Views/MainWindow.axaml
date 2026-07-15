@@ -1,0 +1,236 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:OATControlX.Converters"
+        x:Class="OATControlX.Views.MainWindow"
+        Title="OATControlX — OpenAstroTech Setup Utility"
+        Width="1150" Height="820"
+        MinWidth="980" MinHeight="700">
+
+	<DockPanel Margin="10">
+
+		<!-- ===================== Barre de connexion ===================== -->
+		<Border DockPanel.Dock="Top" Classes="panel" Margin="0,0,0,10">
+			<Grid ColumnDefinitions="Auto,*,Auto,Auto,Auto,Auto,Auto" VerticalAlignment="Center">
+				<TextBlock Grid.Column="0" Text="Périphérique :" VerticalAlignment="Center" Margin="0,0,6,0" />
+				<ComboBox Grid.Column="1" ItemsSource="{Binding Devices}" SelectedItem="{Binding SelectedDevice}"
+				          HorizontalAlignment="Stretch" VerticalAlignment="Center" />
+				<Button Grid.Column="2" Content="⟳" ToolTip.Tip="Re-scanner les ports" Command="{Binding RescanCommand}"
+				        Margin="6,0,12,0" VerticalAlignment="Center" />
+				<StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,12,0">
+					<TextBlock Text="Baud :" VerticalAlignment="Center" Margin="0,0,6,0" />
+					<ComboBox ItemsSource="{Binding BaudRates}" SelectedItem="{Binding SelectedBaudRate}" Width="110" />
+				</StackPanel>
+				<StackPanel Grid.Column="4" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,12,0">
+					<TextBlock Text="ou TCP :" VerticalAlignment="Center" Margin="0,0,6,0" />
+					<TextBox Text="{Binding TcpTarget}" Width="160" Watermark="192.168.x.x:4030" />
+				</StackPanel>
+				<Button Grid.Column="5" Content="{Binding ConnectButtonText}" Command="{Binding ConnectCommand}"
+				        MinWidth="110" VerticalAlignment="Center" Margin="0,0,12,0" />
+				<Button Grid.Column="6" Content="◐ Mode rouge" ToolTip.Tip="Basculer entre le mode sombre et le mode rouge (vision nocturne)"
+				        Command="{Binding ToggleThemeCommand}" VerticalAlignment="Center" Name="BtnTheme" />
+			</Grid>
+		</Border>
+
+		<!-- ===================== Barre de statut ===================== -->
+		<Border DockPanel.Dock="Bottom" Classes="panel" Margin="0,10,0,0" Padding="8,4">
+			<Grid ColumnDefinitions="*,Auto">
+				<TextBlock Grid.Column="0" Text="{Binding ConnectionStatus}" Classes="dim" VerticalAlignment="Center" />
+				<TextBlock Grid.Column="1" Text="{Binding MountName}" VerticalAlignment="Center" />
+			</Grid>
+		</Border>
+
+		<!-- ===================== Corps ===================== -->
+		<Grid ColumnDefinitions="440,10,*">
+
+			<!-- ===== Colonne gauche : position + contrôle ===== -->
+			<StackPanel Grid.Column="0" Spacing="10">
+
+				<Border Classes="panel">
+					<StackPanel Spacing="4">
+						<Grid ColumnDefinitions="*,Auto">
+							<TextBlock Grid.Column="0" Text="Position" Classes="h1" />
+							<TextBlock Grid.Column="1" Text="{Binding MountStatusText}" Classes="dim" VerticalAlignment="Center" />
+						</Grid>
+						<Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" Margin="0,4,0,0">
+							<TextBlock Grid.Row="0" Grid.Column="0" Text="RA " Classes="dim" VerticalAlignment="Center" Margin="0,0,10,0" />
+							<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentRAText}" Classes="readout" />
+							<TextBlock Grid.Row="1" Grid.Column="0" Text="DEC" Classes="dim" VerticalAlignment="Center" Margin="0,0,10,0" />
+							<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CurrentDECText}" Classes="readout" />
+						</Grid>
+						<TextBlock Text="{Binding StepperText}" Classes="mono dim" FontSize="11" />
+						<Separator />
+						<Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto">
+							<StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="4" Margin="0,0,12,0">
+								<Ellipse Classes="motor" Classes.active="{Binding RAMotorActive}" VerticalAlignment="Center" />
+								<TextBlock Text="RA" Classes="dim" />
+							</StackPanel>
+							<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" Margin="0,0,12,0">
+								<Ellipse Classes="motor" Classes.active="{Binding DECMotorActive}" VerticalAlignment="Center" />
+								<TextBlock Text="DEC" Classes="dim" />
+							</StackPanel>
+							<StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4">
+								<Ellipse Classes="motor" Classes.active="{Binding TrkMotorActive}" VerticalAlignment="Center" />
+								<TextBlock Text="TRK" Classes="dim" />
+							</StackPanel>
+							<ToggleSwitch Grid.Column="4" OnContent="Suivi" OffContent="Suivi"
+							              IsChecked="{Binding IsTracking}" IsEnabled="{Binding IsConnected}" />
+						</Grid>
+					</StackPanel>
+				</Border>
+
+				<Border Classes="panel">
+					<StackPanel Spacing="8">
+						<TextBlock Text="Contrôle manuel" Classes="h1" />
+						<Grid ColumnDefinitions="Auto,*" >
+							<!-- Croix de déplacement -->
+							<Grid Grid.Column="0" RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="Auto,Auto,Auto" Margin="0,0,16,0">
+								<Button Grid.Row="0" Grid.Column="1" Classes="slew" Name="BtnNorth" Content="▲&#x0a;N" IsEnabled="{Binding IsConnected}" />
+								<Button Grid.Row="1" Grid.Column="0" Classes="slew" Name="BtnWest" Content="◀ W" IsEnabled="{Binding IsConnected}" />
+								<Button Grid.Row="1" Grid.Column="1" Classes="slew stop" Name="BtnStop" Content="STOP" Command="{Binding StopAllCommand}" />
+								<Button Grid.Row="1" Grid.Column="2" Classes="slew" Name="BtnEast" Content="E ▶" IsEnabled="{Binding IsConnected}" />
+								<Button Grid.Row="2" Grid.Column="1" Classes="slew" Name="BtnSouth" Content="S&#x0a;▼" IsEnabled="{Binding IsConnected}" />
+							</Grid>
+							<!-- Vitesses -->
+							<StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
+								<TextBlock Text="Vitesse" Classes="dim" />
+								<RadioButton GroupName="rate" Content="1 — Guidage" IsChecked="{Binding SlewRate, Converter={x:Static local:IntEqualsConverter.Instance}, ConverterParameter=1}" />
+								<RadioButton GroupName="rate" Content="2 — Centrage" IsChecked="{Binding SlewRate, Converter={x:Static local:IntEqualsConverter.Instance}, ConverterParameter=2}" />
+								<RadioButton GroupName="rate" Content="3 — Déplacement" IsChecked="{Binding SlewRate, Converter={x:Static local:IntEqualsConverter.Instance}, ConverterParameter=3}" />
+								<RadioButton GroupName="rate" Content="4 — Max" IsChecked="{Binding SlewRate, Converter={x:Static local:IntEqualsConverter.Instance}, ConverterParameter=4}" />
+							</StackPanel>
+						</Grid>
+
+						<StackPanel Spacing="6" IsVisible="{Binding HasAzAlt}">
+							<Separator />
+							<TextBlock Text="Alignement polaire motorisé (AZ/ALT)" Classes="dim" />
+							<StackPanel Orientation="Horizontal" Spacing="6">
+								<ComboBox ItemsSource="{Binding NudgeSteps}" SelectedItem="{Binding NudgeArcmin}" Width="80" />
+								<TextBlock Text="arcmin" Classes="dim" VerticalAlignment="Center" Margin="0,0,8,0" />
+								<Button Content="AZ −" Command="{Binding NudgeCommand}" CommandParameter="AZ:-" />
+								<Button Content="AZ +" Command="{Binding NudgeCommand}" CommandParameter="AZ:+" />
+								<Button Content="ALT −" Command="{Binding NudgeCommand}" CommandParameter="ALT:-" />
+								<Button Content="ALT +" Command="{Binding NudgeCommand}" CommandParameter="ALT:+" />
+							</StackPanel>
+						</StackPanel>
+					</StackPanel>
+				</Border>
+
+				<Border Classes="panel">
+					<StackPanel Spacing="8">
+						<TextBlock Text="Homing &amp; Park" Classes="h1" />
+						<StackPanel Orientation="Horizontal" Spacing="6">
+							<Button Content="Aller à Home" Command="{Binding GoHomeCommand}" />
+							<Button Content="Définir Home ici" Command="{Binding SetHomeCommand}" />
+							<Button Content="Park" Command="{Binding ParkCommand}" />
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding HasRAAutoHome}">
+							<Button Content="AutoHome RA (Hall)" Command="{Binding AutoHomeRACommand}" />
+							<ComboBox ItemsSource="{Binding RAHomeDirections}" SelectedItem="{Binding RAHomeDirection}" Width="70" />
+							<TextBlock Text="Offset :" Classes="dim" VerticalAlignment="Center" />
+							<TextBox Text="{Binding RAHomeOffset}" Width="80" />
+							<Button Content="Écrire" Command="{Binding WriteRAHomeOffsetCommand}" />
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Spacing="6" IsVisible="{Binding HasDECAutoHome}">
+							<Button Content="AutoHome DEC (Hall)" Command="{Binding AutoHomeDECCommand}" />
+							<ComboBox ItemsSource="{Binding DECHomeDirections}" SelectedItem="{Binding DECHomeDirection}" Width="70" />
+							<TextBlock Text="Offset :" Classes="dim" VerticalAlignment="Center" />
+							<TextBox Text="{Binding DECHomeOffset}" Width="80" />
+							<Button Content="Écrire" Command="{Binding WriteDECHomeOffsetCommand}" />
+						</StackPanel>
+						<Button Content="Relire les offsets" Command="{Binding ReadHomeOffsetsCommand}" />
+					</StackPanel>
+				</Border>
+			</StackPanel>
+
+			<!-- ===== Colonne droite : onglets ===== -->
+			<TabControl Grid.Column="2">
+
+				<TabItem Header="Infos matériel">
+					<Border Classes="panel" Margin="0,8,0,0">
+						<Grid ColumnDefinitions="160,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" >
+							<Grid.Styles>
+								<Style Selector="TextBlock">
+									<Setter Property="Margin" Value="0,4" />
+								</Style>
+							</Grid.Styles>
+							<TextBlock Grid.Row="0" Grid.Column="0" Text="Monture :" Classes="dim" />
+							<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding MountName}" />
+							<TextBlock Grid.Row="1" Grid.Column="0" Text="Firmware :" Classes="dim" />
+							<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding FirmwareText}" />
+							<TextBlock Grid.Row="2" Grid.Column="0" Text="Carte contrôleur :" Classes="dim" />
+							<TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding BoardText}" />
+							<TextBlock Grid.Row="3" Grid.Column="0" Text="Stepper RA :" Classes="dim" />
+							<TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding RAStepperText}" />
+							<TextBlock Grid.Row="4" Grid.Column="0" Text="Stepper DEC :" Classes="dim" />
+							<TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding DECStepperText}" />
+							<TextBlock Grid.Row="5" Grid.Column="0" Text="Options :" Classes="dim" />
+							<TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding FeaturesText}" TextWrapping="Wrap" />
+							<TextBlock Grid.Row="6" Grid.Column="0" Text="Température :" Classes="dim" />
+							<TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding TemperatureText}" />
+							<TextBlock Grid.Row="7" Grid.Column="0" Text="Réseau :" Classes="dim" />
+							<TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding NetworkText}" />
+						</Grid>
+					</Border>
+				</TabItem>
+
+				<TabItem Header="Calibration">
+					<StackPanel Spacing="10" Margin="0,8,0,0">
+						<Border Classes="panel">
+							<StackPanel Spacing="8">
+								<TextBlock Text="Pas par degré &amp; vitesse" Classes="h1" />
+								<Grid ColumnDefinitions="180,140,*" RowDefinitions="Auto,Auto,Auto" >
+									<Grid.Styles>
+										<Style Selector="TextBox">
+											<Setter Property="Margin" Value="0,3" />
+										</Style>
+										<Style Selector="TextBlock">
+											<Setter Property="VerticalAlignment" Value="Center" />
+										</Style>
+									</Grid.Styles>
+									<TextBlock Grid.Row="0" Grid.Column="0" Text="RA (pas/degré) :" Classes="dim" />
+									<TextBox Grid.Row="0" Grid.Column="1" Text="{Binding RAStepsPerDeg}" />
+									<TextBlock Grid.Row="1" Grid.Column="0" Text="DEC (pas/degré) :" Classes="dim" />
+									<TextBox Grid.Row="1" Grid.Column="1" Text="{Binding DECStepsPerDeg}" />
+									<TextBlock Grid.Row="2" Grid.Column="0" Text="Facteur de vitesse :" Classes="dim" />
+									<TextBox Grid.Row="2" Grid.Column="1" Text="{Binding SpeedFactor}" />
+								</Grid>
+								<StackPanel Orientation="Horizontal" Spacing="6">
+									<Button Content="Relire depuis la monture" Command="{Binding RefreshCalibrationCommand}" />
+									<Button Content="Appliquer à la monture" Command="{Binding ApplyCalibrationCommand}" />
+								</StackPanel>
+								<TextBlock Classes="dim" FontSize="11" TextWrapping="Wrap"
+								           Text="Les valeurs sont persistées dans l'EEPROM de la monture. RA/DEC : ajuste après une calibration par plate-solving. Facteur de vitesse : corrige la dérive du suivi sidéral." />
+							</StackPanel>
+						</Border>
+						<Border Classes="panel">
+							<StackPanel Spacing="8">
+								<TextBlock Text="Maintenance" Classes="h1" />
+								<Button Content="{Binding ResetButtonText}" Command="{Binding FactoryResetCommand}" />
+								<TextBlock Classes="dim" FontSize="11" TextWrapping="Wrap"
+								           Text="Efface la configuration stockée en EEPROM (recommandé après un re-flash du firmware). Double-clic de confirmation requis, puis redémarre la monture." />
+							</StackPanel>
+						</Border>
+					</StackPanel>
+				</TabItem>
+
+				<TabItem Header="Console">
+					<Grid RowDefinitions="*,Auto" Margin="0,8,0,0">
+						<Border Grid.Row="0" Background="{DynamicResource OatConsoleBg}"
+						        BorderBrush="{DynamicResource OatPanelBorder}" BorderThickness="1" CornerRadius="6">
+							<ListBox Name="ConsoleList" ItemsSource="{Binding ConsoleLines}" Background="Transparent"
+							         FontFamily="monospace" FontSize="12" Foreground="{DynamicResource OatConsoleText}" />
+						</Border>
+						<Grid Grid.Row="1" ColumnDefinitions="*,Auto,Auto" Margin="0,8,0,0">
+							<TextBox Grid.Column="0" Name="ConsoleInputBox" Text="{Binding ConsoleInput}"
+							         Watermark=":GX# — commande LX200/OAT brute" FontFamily="monospace" />
+							<ComboBox Grid.Column="1" ItemsSource="{Binding ResponseTypes}"
+							          SelectedIndex="{Binding SelectedResponseType}" Width="140" Margin="6,0" />
+							<Button Grid.Column="2" Content="Envoyer" Command="{Binding SendConsoleCommand}" />
+						</Grid>
+					</Grid>
+				</TabItem>
+
+			</TabControl>
+		</Grid>
+	</DockPanel>
+</Window>

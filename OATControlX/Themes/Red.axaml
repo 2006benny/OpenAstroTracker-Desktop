@@ -1,0 +1,143 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<!-- ============ OATControlX semantic palette : Red Night Vision ============ -->
+	<Color x:Key="OatWindowBgColor">#0A0000</Color>
+	<Color x:Key="OatPanelBgColor">#140202</Color>
+	<Color x:Key="OatPanelBorderColor">#3A0A0A</Color>
+	<Color x:Key="OatTextColor">#D82820</Color>
+	<Color x:Key="OatTextDimColor">#7A1410</Color>
+	<Color x:Key="OatAccentColor">#FF4538</Color>
+	<Color x:Key="OatAccentDimColor">#661410</Color>
+	<Color x:Key="OatWarnColor">#FF6B4A</Color>
+	<Color x:Key="OatOkColor">#B03028</Color>
+	<Color x:Key="OatStopColor">#FF2010</Color>
+	<Color x:Key="OatReadoutColor">#FF5040</Color>
+	<Color x:Key="OatConsoleBgColor">#0A0000</Color>
+	<Color x:Key="OatConsoleTextColor">#C82820</Color>
+	<Color x:Key="OatControlBgColor">#200404</Color>
+	<Color x:Key="OatControlBgHoverColor">#301010</Color>
+	<Color x:Key="OatControlBgPressedColor">#401414</Color>
+
+	<SolidColorBrush x:Key="OatWindowBg" Color="{StaticResource OatWindowBgColor}" />
+	<SolidColorBrush x:Key="OatPanelBg" Color="{StaticResource OatPanelBgColor}" />
+	<SolidColorBrush x:Key="OatPanelBorder" Color="{StaticResource OatPanelBorderColor}" />
+	<SolidColorBrush x:Key="OatText" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="OatTextDim" Color="{StaticResource OatTextDimColor}" />
+	<SolidColorBrush x:Key="OatAccent" Color="{StaticResource OatAccentColor}" />
+	<SolidColorBrush x:Key="OatAccentDim" Color="{StaticResource OatAccentDimColor}" />
+	<SolidColorBrush x:Key="OatWarn" Color="{StaticResource OatWarnColor}" />
+	<SolidColorBrush x:Key="OatOk" Color="{StaticResource OatOkColor}" />
+	<SolidColorBrush x:Key="OatStop" Color="{StaticResource OatStopColor}" />
+	<SolidColorBrush x:Key="OatReadout" Color="{StaticResource OatReadoutColor}" />
+	<SolidColorBrush x:Key="OatConsoleBg" Color="{StaticResource OatConsoleBgColor}" />
+	<SolidColorBrush x:Key="OatConsoleText" Color="{StaticResource OatConsoleTextColor}" />
+	<SolidColorBrush x:Key="OatControlBg" Color="{StaticResource OatControlBgColor}" />
+	<SolidColorBrush x:Key="OatControlBgHover" Color="{StaticResource OatControlBgHoverColor}" />
+	<SolidColorBrush x:Key="OatControlBgPressed" Color="{StaticResource OatControlBgPressedColor}" />
+
+	<!-- ============ Fluent control resource overrides ============ -->
+	<Color x:Key="SystemAccentColor">#FF4538</Color>
+	<Color x:Key="SystemAccentColorDark1">#D93A2E</Color>
+	<Color x:Key="SystemAccentColorDark2">#B33026</Color>
+	<Color x:Key="SystemAccentColorDark3">#8C261E</Color>
+	<Color x:Key="SystemAccentColorLight1">#FF6B60</Color>
+	<Color x:Key="SystemAccentColorLight2">#FF9088</Color>
+	<Color x:Key="SystemAccentColorLight3">#FFB5B0</Color>
+
+	<SolidColorBrush x:Key="ButtonBackground" Color="{StaticResource OatControlBgColor}" />
+	<SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="{StaticResource OatControlBgHoverColor}" />
+	<SolidColorBrush x:Key="ButtonBackgroundPressed" Color="{StaticResource OatControlBgPressedColor}" />
+	<SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="#100202" />
+	<SolidColorBrush x:Key="ButtonForeground" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="ButtonForegroundPressed" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="ButtonForegroundDisabled" Color="#501010" />
+	<SolidColorBrush x:Key="ButtonBorderBrush" Color="{StaticResource OatPanelBorderColor}" />
+	<SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="{StaticResource OatAccentColor}" />
+	<SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="{StaticResource OatAccentColor}" />
+	<SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="#280808" />
+
+	<SolidColorBrush x:Key="TextControlBackground" Color="{StaticResource OatConsoleBgColor}" />
+	<SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="{StaticResource OatConsoleBgColor}" />
+	<SolidColorBrush x:Key="TextControlBackgroundFocused" Color="{StaticResource OatConsoleBgColor}" />
+	<SolidColorBrush x:Key="TextControlBackgroundDisabled" Color="#100202" />
+	<SolidColorBrush x:Key="TextControlForeground" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="TextControlForegroundFocused" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="TextControlForegroundDisabled" Color="#501010" />
+	<SolidColorBrush x:Key="TextControlBorderBrush" Color="{StaticResource OatPanelBorderColor}" />
+	<SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="{StaticResource OatAccentDimColor}" />
+	<SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="{StaticResource OatAccentColor}" />
+	<SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="{StaticResource OatTextDimColor}" />
+	<SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="{StaticResource OatTextDimColor}" />
+	<SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="{StaticResource OatTextDimColor}" />
+	<Color x:Key="TextControlSelectionHighlightColor">#661410</Color>
+
+	<SolidColorBrush x:Key="ComboBoxBackground" Color="{StaticResource OatControlBgColor}" />
+	<SolidColorBrush x:Key="ComboBoxBackgroundPointerOver" Color="{StaticResource OatControlBgHoverColor}" />
+	<SolidColorBrush x:Key="ComboBoxBackgroundPressed" Color="{StaticResource OatControlBgPressedColor}" />
+	<SolidColorBrush x:Key="ComboBoxForeground" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="ComboBoxBorderBrush" Color="{StaticResource OatPanelBorderColor}" />
+	<SolidColorBrush x:Key="ComboBoxBorderBrushPointerOver" Color="{StaticResource OatAccentDimColor}" />
+	<SolidColorBrush x:Key="ComboBoxBorderBrushPressed" Color="{StaticResource OatAccentColor}" />
+	<SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="{StaticResource OatPanelBgColor}" />
+	<SolidColorBrush x:Key="ComboBoxDropDownBorderBrush" Color="{StaticResource OatPanelBorderColor}" />
+	<SolidColorBrush x:Key="ComboBoxItemForeground" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="ComboBoxItemBackgroundPointerOver" Color="{StaticResource OatControlBgHoverColor}" />
+	<SolidColorBrush x:Key="ComboBoxItemBackgroundSelected" Color="{StaticResource OatAccentDimColor}" />
+	<SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPointerOver" Color="{StaticResource OatAccentDimColor}" />
+
+	<SolidColorBrush x:Key="ToggleSwitchContentForeground" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="ToggleSwitchFillOn" Color="{StaticResource OatAccentColor}" />
+	<SolidColorBrush x:Key="ToggleSwitchFillOnPointerOver" Color="{StaticResource OatAccentColor}" />
+	<SolidColorBrush x:Key="ToggleSwitchFillOnPressed" Color="{StaticResource OatAccentDimColor}" />
+	<SolidColorBrush x:Key="ToggleSwitchStrokeOn" Color="{StaticResource OatAccentColor}" />
+	<SolidColorBrush x:Key="ToggleSwitchStrokeOnPointerOver" Color="{StaticResource OatAccentColor}" />
+	<SolidColorBrush x:Key="ToggleSwitchStrokeOnPressed" Color="{StaticResource OatAccentDimColor}" />
+	<SolidColorBrush x:Key="ToggleSwitchFillOff" Color="{StaticResource OatControlBgColor}" />
+	<SolidColorBrush x:Key="ToggleSwitchFillOffPointerOver" Color="{StaticResource OatControlBgHoverColor}" />
+	<SolidColorBrush x:Key="ToggleSwitchFillOffPressed" Color="{StaticResource OatControlBgPressedColor}" />
+	<SolidColorBrush x:Key="ToggleSwitchStrokeOff" Color="{StaticResource OatTextDimColor}" />
+	<SolidColorBrush x:Key="ToggleSwitchStrokeOffPointerOver" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="ToggleSwitchStrokeOffPressed" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="ToggleSwitchKnobFillOn" Color="{StaticResource OatWindowBgColor}" />
+	<SolidColorBrush x:Key="ToggleSwitchKnobFillOnPointerOver" Color="{StaticResource OatWindowBgColor}" />
+	<SolidColorBrush x:Key="ToggleSwitchKnobFillOnPressed" Color="{StaticResource OatWindowBgColor}" />
+	<SolidColorBrush x:Key="ToggleSwitchKnobFillOff" Color="{StaticResource OatTextDimColor}" />
+	<SolidColorBrush x:Key="ToggleSwitchKnobFillOffPointerOver" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="ToggleSwitchKnobFillOffPressed" Color="{StaticResource OatTextColor}" />
+
+	<SolidColorBrush x:Key="RadioButtonForeground" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="RadioButtonForegroundPointerOver" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="RadioButtonForegroundPressed" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="RadioButtonOuterEllipseStroke" Color="{StaticResource OatTextDimColor}" />
+	<SolidColorBrush x:Key="RadioButtonOuterEllipseStrokePointerOver" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="RadioButtonOuterEllipseStrokePressed" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="RadioButtonOuterEllipseCheckedStroke" Color="{StaticResource OatAccentColor}" />
+	<SolidColorBrush x:Key="RadioButtonOuterEllipseCheckedStrokePointerOver" Color="{StaticResource OatAccentColor}" />
+	<SolidColorBrush x:Key="RadioButtonOuterEllipseCheckedStrokePressed" Color="{StaticResource OatAccentDimColor}" />
+	<SolidColorBrush x:Key="RadioButtonOuterEllipseCheckedFill" Color="{StaticResource OatAccentColor}" />
+	<SolidColorBrush x:Key="RadioButtonOuterEllipseCheckedFillPointerOver" Color="{StaticResource OatAccentColor}" />
+	<SolidColorBrush x:Key="RadioButtonOuterEllipseCheckedFillPressed" Color="{StaticResource OatAccentDimColor}" />
+	<SolidColorBrush x:Key="RadioButtonCheckGlyphFill" Color="{StaticResource OatWindowBgColor}" />
+	<SolidColorBrush x:Key="RadioButtonCheckGlyphFillPointerOver" Color="{StaticResource OatWindowBgColor}" />
+	<SolidColorBrush x:Key="RadioButtonCheckGlyphFillPressed" Color="{StaticResource OatWindowBgColor}" />
+
+	<SolidColorBrush x:Key="CheckBoxForegroundUnchecked" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="CheckBoxForegroundChecked" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeUnchecked" Color="{StaticResource OatTextDimColor}" />
+	<SolidColorBrush x:Key="CheckBoxCheckBackgroundStrokeChecked" Color="{StaticResource OatAccentColor}" />
+	<SolidColorBrush x:Key="CheckBoxCheckBackgroundFillChecked" Color="{StaticResource OatAccentColor}" />
+	<SolidColorBrush x:Key="CheckBoxCheckGlyphForegroundChecked" Color="{StaticResource OatWindowBgColor}" />
+
+	<SolidColorBrush x:Key="ToolTipBackground" Color="{StaticResource OatPanelBgColor}" />
+	<SolidColorBrush x:Key="ToolTipForeground" Color="{StaticResource OatTextColor}" />
+	<SolidColorBrush x:Key="ToolTipBorderBrush" Color="{StaticResource OatPanelBorderColor}" />
+
+	<SolidColorBrush x:Key="ScrollBarThumbFill" Color="{StaticResource OatPanelBorderColor}" />
+	<SolidColorBrush x:Key="ScrollBarThumbFillPointerOver" Color="{StaticResource OatTextDimColor}" />
+	<SolidColorBrush x:Key="ScrollBarThumbFillPressed" Color="{StaticResource OatAccentDimColor}" />
+	<SolidColorBrush x:Key="ScrollBarThumbBackgroundColor" Color="{StaticResource OatPanelBorderColor}" />
+
+</ResourceDictionary>

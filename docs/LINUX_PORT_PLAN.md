@@ -1,5 +1,37 @@
 # OATControl Linux Port — Analysis & Plan
 
+## FINAL SCOPE (decided 2026-07-15)
+
+Telescope *control* on Linux is delegated to KStars/Ekos through the INDI
+`lx200_OpenAstroTech` driver (plus the owner's `claude/oat-pac-interface` branch of
+`indi`, which implements `INDI::PACInterface` so the Ekos Polar Alignment Assistant
+can drive the motorised AZ/ALT axes via `:MAZ`/`:MAL` for automated incremental
+polar alignment). Between stock driver and that branch, INDI already covers: GOTO,
+sync, tracking control, park, home (`:hF#`), focuser, RA autohome + offset, DEC
+limits, raw Meade command passthrough, and PAA auto-correction.
+
+The Linux port is therefore **not** a full OATControl clone but a native
+**bench/setup utility** — `OATControlX`, a .NET 8 + Avalonia 11 app — covering what
+INDI does not:
+
+- Manual axis control for hardware bring-up: N/S/E/W slew at 4 rates, stop-all,
+  live motor/stepper status from `:GX#`, tracking toggle
+- Calibration: RA/DEC steps-per-degree (`:XGR`/`:XGD`/`:XSR`/`:XSD`), speed factor
+  (`:XGS`/`:XSS`)
+- Homing: Hall-sensor autohome RA **and** DEC (`:MHR`/`:MHD`), home offsets
+  (`:XGHS`/`:XSHR`/`:XSHD`), set home (`:SHP`), go home (`:hF`), park (`:hP`)
+- AZ/ALT nudges in arcminutes (`:MAZ`/`:MAL`) when the mount has those motors
+- Diagnostics: firmware/board/steppers/drivers/addons (`:GVP`/`:GVN`/`:XGM`/`:XGMS`),
+  temperature (`:XLGT`), network state (`:XGN`), free-form LX200 command console
+- Maintenance: EEPROM factory reset (`:XFR`)
+- **UI: dark astronomy theme + switchable red-screen night-vision mode**
+  (both runtime-switchable, DynamicResource-based)
+
+Explicitly not ported: theme editor, checklists, POI catalog/target chooser,
+SharpCap/NINA polar-align dialogs, mini controller, update auto-installer, ASCOM.
+
+The sections below are the original full analysis, kept for reference.
+
 ## Goal
 
 Make the OATControl mount-control dashboard usable on Linux, so OpenAstroTracker /
