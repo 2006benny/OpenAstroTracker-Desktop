@@ -105,8 +105,32 @@ namespace OATCommunications.CrossPlatform
 				}
 				catch (Exception ex)
 				{
-					Log.WriteLine("SERIAL: {0:0000}: [{1}] Failed to receive response. {2}", job.Number, job.Command, ex.Message);
-					response = new CommandResponse(string.Empty, false, $"Unable to read response to {job.Command} from {_portName}. {ex.Message}");
+					// Some firmware (OAE ESP32 v1.13.x) truncates long replies
+					// like :XGM# and never sends the terminating '#'. ReadTo
+					// puts the consumed chars back on timeout, so salvage
+					// whatever actually arrived instead of failing the job.
+					string partial = string.Empty;
+					if (job.ResponseType == ResponseType.FullResponse || job.ResponseType == ResponseType.DoubleFullResponse)
+					{
+						try
+						{
+							partial = _port.ReadExisting();
+						}
+						catch
+						{
+						}
+					}
+
+					if (!string.IsNullOrEmpty(partial))
+					{
+						Log.WriteLine("SERIAL: {0:0000}: [{1}] No terminator; salvaged partial response '{2}'", job.Number, job.Command, partial);
+						response = new CommandResponse(partial.TrimEnd('#'), true);
+					}
+					else
+					{
+						Log.WriteLine("SERIAL: {0:0000}: [{1}] Failed to receive response. {2}", job.Number, job.Command, ex.Message);
+						response = new CommandResponse(string.Empty, false, $"Unable to read response to {job.Command} from {_portName}. {ex.Message}");
+					}
 				}
 			}
 			else

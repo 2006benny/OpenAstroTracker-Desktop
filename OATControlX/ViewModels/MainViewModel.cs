@@ -411,7 +411,10 @@ namespace OATControlX.ViewModels
 					case "HSAV": features += "DEC AutoHome, "; HasDECAutoHome = true; break;
 					default:
 						// OAE firmware lists absent addons as NO_GPS, NO_GYRO, ...
-						if (!hwParts[i].StartsWith("NO_"))
+						// and its truncated :XGM# reply can leave a dangling
+						// fragment as the last entry — real addon names are
+						// at least 3 characters.
+						if (!hwParts[i].StartsWith("NO_") && hwParts[i].Length >= 3)
 						{
 							features += hwParts[i] + ", ";
 						}
