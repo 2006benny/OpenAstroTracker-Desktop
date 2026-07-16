@@ -341,10 +341,10 @@ namespace OATControlX.ViewModels
 			BoardText = hwParts[0];
 			if (hwParts.Length > 2)
 			{
-				var raParts = hwParts[1].Split('|');
-				var decParts = hwParts[2].Split('|');
-				RAStepperText = raParts.Length > 1 ? $"{raParts[0]}, {raParts[1]}T" : hwParts[1];
-				DECStepperText = decParts.Length > 1 ? $"{decParts[0]}, {decParts[1]}T" : hwParts[2];
+				// Classic OAT: "NEMA 17|400" (type|teeth); OAE ESP32 firmware:
+				// "NEMA|16|3600" (type|µstep|steps) — display fields as-is.
+				RAStepperText = string.Join(", ", hwParts[1].Split('|'));
+				DECStepperText = string.Join(", ", hwParts[2].Split('|'));
 			}
 
 			bool hasAz = false, hasAlt = false;
@@ -361,7 +361,13 @@ namespace OATControlX.ViewModels
 					case "FOC": features += "Focuser, "; break;
 					case "HSAH": features += "RA AutoHome, "; HasRAAutoHome = true; break;
 					case "HSAV": features += "DEC AutoHome, "; HasDECAutoHome = true; break;
-					default: features += hwParts[i] + ", "; break;
+					default:
+						// OAE firmware lists absent addons as NO_GPS, NO_GYRO, ...
+						if (!hwParts[i].StartsWith("NO_"))
+						{
+							features += hwParts[i] + ", ";
+						}
+						break;
 				}
 			}
 			HasAzAlt = hasAz || hasAlt;
