@@ -285,6 +285,7 @@ namespace OATControlX.ViewModels
 		public bool HasDECAutoHome { get => _hasDECAutoHome; set => SetProperty(ref _hasDECAutoHome, value); }
 
 		private bool _hasGyro;
+		private bool _hwInfoPending;
 
 		private async Task<string> QueryWithRetry(string command, int attempts = 3)
 		{
@@ -296,6 +297,13 @@ namespace OATControlX.ViewModels
 					return result;
 				}
 				AppendConsole($"<   {command} : pas de réponse (essai {i + 1}/{attempts})");
+				if (i < attempts - 1)
+				{
+					// The OAE ESP32 firmware answers simple queries right after
+					// boot but needs a little longer before :XGM# is served;
+					// give it breathing room between attempts.
+					await Task.Delay(1000);
+				}
 			}
 			return null;
 		}
@@ -332,7 +340,7 @@ namespace OATControlX.ViewModels
 			_oat.SetFirmwareVersion(_firmwareVersion);
 
 			string hw = await QueryWithRetry(":XGM#");
-			if (!string.IsNullOrEmpty(hw))
+			if (IsValidHardwareInfo(hw))
 			{
 				AppendConsole($"<   :XGM# → {hw}");
 				ParseHardware(hw);
@@ -340,7 +348,8 @@ namespace OATControlX.ViewModels
 			}
 			else
 			{
-				AppendConsole("< ATTENTION : pas de réponse à :XGM# — infos matériel et boutons AZ/ALT indisponibles");
+				_hwInfoPending = true;
+				AppendConsole($"< ATTENTION : réponse :XGM# absente ou invalide ({hw ?? "aucune"}) — nouvel essai automatique toutes les 5 s");
 			}
 
 			if (_firmwareVersion > 10875)
@@ -366,6 +375,12 @@ namespace OATControlX.ViewModels
 
 			AppendConsole($"< Connecté à {MountName}");
 			return true;
+		}
+
+		// A real :XGM# reply is "board,RAstepper,DECstepper[,addons...]".
+		private static bool IsValidHardwareInfo(string hw)
+		{
+			return !string.IsNullOrEmpty(hw) && hw.Split(',').Length >= 3;
 		}
 
 		private void ParseHardware(string hwData)
@@ -487,6 +502,17 @@ namespace OATControlX.ViewModels
 				}
 
 				_pollTick++;
+				if (_hwInfoPending && (_pollTick % 5) == 0)
+				{
+					string hw = await QueryAsync(":XGM#");
+					if (IsValidHardwareInfo(hw))
+					{
+						_hwInfoPending = false;
+						AppendConsole($"<   :XGM# → {hw}");
+						ParseHardware(hw);
+						AppendConsole($"<   AZ/ALT motorisé : {(HasAzAlt ? "OUI" : "NON")}  |  AutoHome RA : {(HasRAAutoHome ? "OUI" : "NON")}  |  DEC : {(HasDECAutoHome ? "OUI" : "NON")}");
+					}
+				}
 				if (_hasGyro && (_pollTick % 30) == 0)
 				{
 					string temp = await QueryAsync(":XLGT#");
@@ -786,7 +812,9 @@ namespace OATControlX.ViewModels
 			}
 			else
 			{
-				_handler.SendCommand(command, r => tcs.TrySetResult(r.Success ? r.Data : null));
+				// The legacy TCP handler fabricates a successful "0#" reply on
+				// read timeout; treat it as the failure it really is.
+				_handler.SendCommand(command, r => tcs.TrySetResult(r.Success && r.Data != "0#" ? r.Data : null));
 			}
 			return tcs.Task;
 		}

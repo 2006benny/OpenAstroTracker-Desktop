@@ -45,7 +45,9 @@ namespace OATCommunications.CrossPlatform
 				{
 					BaudRate = rate,
 					DtrEnable = false,
-					ReadTimeout = 2000,
+					// The OAE ESP32 firmware can take >2s to answer :XGM# when
+					// queried shortly after boot; allow it some slack.
+					ReadTimeout = 3000,
 					WriteTimeout = 2000,
 				};
 			}
