@@ -5,8 +5,8 @@ import threading
 
 RESPONSES = {
     ":GVP#": "OpenAstroExplorer#",
-    ":GVN#": "V1.13.6#",
-    ":XGM#": "MKS Gen L V2.1,NEMA 17|400,NEMA 17|400,GYRO,HSAH,HSAV,AUTO_AZ_ALT#",
+    ":GVN#": "v1.13.20#",
+    ":XGM#": "ESP32,NEMA|16|3600,NEMA|1|45000.00,NO_GPS,AUTO_AZ_ALT,NO_GYRO,NO_LCD#",
     ":XGMS#": "TU,16,64|TU,16,64#",
     ":XGR#": "420.0#",
     ":XGD#": "420.0#",

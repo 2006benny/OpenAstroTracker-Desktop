@@ -189,6 +189,14 @@ namespace OATControlX.ViewModels
 			_handler = handler;
 			_oat = new OatmealTelescopeCommandHandlers(handler);
 
+			if (handler is SerialCommunicationHandler)
+			{
+				// Opening the port toggles DTR/RTS, which resets ESP32-based
+				// boards; give the firmware time to boot before talking to it.
+				ConnectionStatus = "Port ouvert — attente du démarrage de la carte (3 s)...";
+				await Task.Delay(3000);
+			}
+
 			bool ok = await RunHandshake();
 			if (!ok)
 			{
@@ -278,19 +286,38 @@ namespace OATControlX.ViewModels
 
 		private bool _hasGyro;
 
+		private async Task<string> QueryWithRetry(string command, int attempts = 3)
+		{
+			for (int i = 0; i < attempts; i++)
+			{
+				string result = await QueryAsync(command);
+				if (!string.IsNullOrEmpty(result))
+				{
+					return result;
+				}
+				AppendConsole($"<   {command} : pas de réponse (essai {i + 1}/{attempts})");
+			}
+			return null;
+		}
+
 		private async Task<bool> RunHandshake()
 		{
-			string product = await QueryAsync(":GVP#");
+			AppendConsole("< Handshake : interrogation de la monture...");
+			string product = await QueryWithRetry(":GVP#");
 			if (string.IsNullOrEmpty(product))
 			{
+				AppendConsole("< ÉCHEC : aucune réponse à :GVP# — mauvais port, mauvais baud, ou carte pas prête");
 				return false;
 			}
+			AppendConsole($"<   :GVP# → {product}");
 
-			string version = await QueryAsync(":GVN#");
+			string version = await QueryWithRetry(":GVN#");
 			if (string.IsNullOrEmpty(version) || version.StartsWith("["))
 			{
+				AppendConsole($"< ÉCHEC : réponse :GVN# invalide ({version ?? "aucune"})");
 				return false;
 			}
+			AppendConsole($"<   :GVN# → {version}");
 
 			MountName = $"{product} {version}";
 			FirmwareText = version;
@@ -304,10 +331,16 @@ namespace OATControlX.ViewModels
 			}
 			_oat.SetFirmwareVersion(_firmwareVersion);
 
-			string hw = await QueryAsync(":XGM#");
+			string hw = await QueryWithRetry(":XGM#");
 			if (!string.IsNullOrEmpty(hw))
 			{
+				AppendConsole($"<   :XGM# → {hw}");
 				ParseHardware(hw);
+				AppendConsole($"<   AZ/ALT motorisé : {(HasAzAlt ? "OUI" : "NON")}  |  AutoHome RA : {(HasRAAutoHome ? "OUI" : "NON")}  |  DEC : {(HasDECAutoHome ? "OUI" : "NON")}");
+			}
+			else
+			{
+				AppendConsole("< ATTENTION : pas de réponse à :XGM# — infos matériel et boutons AZ/ALT indisponibles");
 			}
 
 			if (_firmwareVersion > 10875)
